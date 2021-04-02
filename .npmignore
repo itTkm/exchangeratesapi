@@ -7,3 +7,4 @@ example/
 .eslintrc
 .gitignore
 .travis.yml
+.DS_Store

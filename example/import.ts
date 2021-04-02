@@ -43,8 +43,8 @@ async function exchangeratesapiSamples() {
   /**
    * Historical Rates (with Parameters)
    *  - Date: 2013-12-24
-   *  - Source Currency: USD
-   *  - Symbols: GBP, JPY, EUR
+   *  - Source Currency: GBP
+   *  - Symbols: USD, CAD, EUR
    */
   const historicalParameters: IExchangeratesapiParams = {
     date: "2013-12-24",

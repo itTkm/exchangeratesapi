@@ -106,3 +106,5 @@ typings/
 # Lock file in subdirectory
 */package-lock.json
 */yarn.lock
+
+.DS_Store
