@@ -156,7 +156,7 @@ console.dir(await api.timeseries(timeseriesParameters));
 
 ## Response
 
-The format of the response is compatible with the original home.
+The format of the response is compatible with the original [Exchangerates API](https://exchangeratesapi.io/).
 
 See the [official documentation](https://exchangeratesapi.io/documentation/) for details.
 
