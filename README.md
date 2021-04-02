@@ -1,6 +1,6 @@
 # Free client for exchangeratesapi.io
 
-[![npm version](https://img.shields.io/npm/v/@ittkm/exchangeratesapi.svg)](https://www.npmjs.com/package/exchangeratesapi)
+[![npm version](https://img.shields.io/npm/v/@ittkm/exchangeratesapi.svg)](https://www.npmjs.com/package/@ittkm/exchangeratesapi)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](./LICENSE)
 [![Build Status](https://travis-ci.org/itTkm/exchangeratesapi.svg?branch=main)](https://travis-ci.org/itTkm/exchangeratesapi)
 
