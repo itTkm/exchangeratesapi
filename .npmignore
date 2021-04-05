@@ -4,7 +4,15 @@ node_modules/
 src/
 example/
 .babelrc
-.eslintrc
+.env
+.env.example
+.eslintignore
+.eslintrc.js
 .gitignore
+.node-version
+.prettierignore
+.prettierrc.json
 .travis.yml
+tsconfig.eslint.json
+
 .DS_Store

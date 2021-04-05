@@ -108,3 +108,5 @@ typings/
 */yarn.lock
 
 .DS_Store
+
+!example/.env
