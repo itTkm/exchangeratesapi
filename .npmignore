@@ -1,8 +1,10 @@
 .vscode/
+coverage/
 img/
 node_modules/
 src/
 example/
+tests/
 .babelrc
 .env
 .env.example
@@ -13,6 +15,7 @@ example/
 .prettierignore
 .prettierrc.json
 .travis.yml
+jest.config.js
 tsconfig.eslint.json
 
 .DS_Store
