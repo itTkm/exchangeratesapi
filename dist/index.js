@@ -228,11 +228,17 @@ class exchangeratesapi {
             const rates = {};
             if (params.symbols && params.symbols instanceof Array) {
                 for (const symbol of params.symbols) {
-                    rates[symbol] = this.currencyExchange(responseRates[params.base], responseRates[symbol]);
+                    if (symbol in responseRates && params.base in responseRates)
+                        rates[symbol] = this.currencyExchange(responseRates[params.base], responseRates[symbol]);
                 }
             }
-            else if (params.symbols) {
+            else if (params.symbols &&
+                params.symbols in responseRates &&
+                params.base in responseRates) {
                 rates[params.symbols] = this.currencyExchange(responseRates[params.base], responseRates[params.symbols]);
+            }
+            if (!Object.keys(rates).length) {
+                throw new Error("You have provided one or more invalid Currency Codes.");
             }
             response.base = params.base;
             return {
@@ -254,7 +260,13 @@ class exchangeratesapi {
             symbols: [params.from, params.to],
         };
         const rates = await this.historical(requestParams);
-        const rate = this.currencyExchange(rates.rates[params.from], rates.rates[params.to]);
+        let rate;
+        if (params.from in rates.rates && params.to in rates.rates) {
+            rate = this.currencyExchange(rates.rates[params.from], rates.rates[params.to]);
+        }
+        else {
+            throw new Error("You have provided one or more invalid Currency Codes.");
+        }
         return {
             success: rates.success,
             query: {
@@ -292,11 +304,15 @@ class exchangeratesapi {
             if (params.symbols instanceof Array) {
                 rates[rateResponse.date] = {};
                 for (const symbol of params.symbols) {
-                    rates[rateResponse.date][symbol] = rateResponse.rates[symbol];
+                    if (symbol in rateResponse.rates)
+                        rates[rateResponse.date][symbol] = rateResponse.rates[symbol];
                 }
             }
             else {
                 rates[rateResponse.date] = rateResponse.rates;
+            }
+            if (!Object.keys(rates[rateResponse.date]).length) {
+                throw new Error("You have provided one or more invalid Currency Codes.");
             }
         }
         return {
@@ -312,17 +328,14 @@ class exchangeratesapi {
         const response = await node_fetch_1.default(url, {
             method: "GET",
         })
-            .then((res) => {
+            .then(async (res) => {
             if (!res.ok) {
-                throw new Error(`${res.status} ${res.statusText}`);
+                throw new Error(`${res.status} ${res.statusText} ${JSON.stringify(await res.json())}`);
             }
             return res.json();
         })
             .then((json) => {
             return json;
-        })
-            .catch((reason) => {
-            throw new Error(reason);
         });
         return response;
     }
