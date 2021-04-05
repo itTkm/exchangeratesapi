@@ -263,18 +263,13 @@ export class exchangeratesapi {
     if (params && params.date) date = params.date;
 
     let symbols = "";
-    if (!params.symbols) {
-      for (const symbol of DEFAULT_SYMBOLS) {
-        if (symbols === "") symbols = symbol;
-        else symbols += `,${symbol}`;
-      }
-    } else if (params.symbols instanceof Array) {
+    if (params.symbols && params.symbols instanceof Array) {
       for (const symbol of params.symbols) {
         if (symbols === "") symbols = symbol;
         else symbols += `,${symbol}`;
       }
     } else {
-      symbols = params.symbols;
+      symbols = params.symbols ? params.symbols : "";
     }
 
     let base = DEFAULT_BASE;
@@ -284,28 +279,38 @@ export class exchangeratesapi {
       base = params.base;
     }
 
-    const url = `${API_ENDPOINT}/${date}?access_key=${this.ACCESS_KEY}&base=${base}&symbols=${symbols}`;
+    let url = `${API_ENDPOINT}/${date}?access_key=${this.ACCESS_KEY}&base=${base}`;
+    if (!symbols) url += `&symbols=${symbols}`;
+
     const response = await this.request(url);
     if (params.base && base !== params.base) {
       const responseRates = response.rates;
       const rates: IExchangeratesapiRates = {};
-      if (params.symbols && params.symbols instanceof Array) {
-        for (const symbol of params.symbols) {
-          if (symbol in responseRates && params.base in responseRates)
-            rates[symbol] = this.currencyExchange(
-              responseRates[params.base],
-              responseRates[symbol]
-            );
+      if (params.symbols) {
+        if (params.symbols instanceof Array) {
+          for (const symbol of params.symbols) {
+            if (symbol in responseRates && params.base in responseRates)
+              rates[symbol] = this.currencyExchange(
+                responseRates[params.base],
+                responseRates[symbol]
+              );
+          }
+        } else if (
+          params.symbols in responseRates &&
+          params.base in responseRates
+        ) {
+          rates[params.symbols] = this.currencyExchange(
+            responseRates[params.base],
+            responseRates[params.symbols]
+          );
         }
-      } else if (
-        params.symbols &&
-        params.symbols in responseRates &&
-        params.base in responseRates
-      ) {
-        rates[params.symbols] = this.currencyExchange(
-          responseRates[params.base],
-          responseRates[params.symbols]
-        );
+      } else {
+        for (const symbol of Object.keys(responseRates)) {
+          rates[symbol] = this.currencyExchange(
+            responseRates[params.base],
+            responseRates[symbol]
+          );
+        }
       }
       if (!Object.keys(rates).length) {
         throw new Error(
@@ -366,7 +371,7 @@ export class exchangeratesapi {
     const startDate = new Date(Date.parse(params.start_date));
     const endDate = new Date(Date.parse(params.end_date));
     if (startDate.valueOf() > endDate.valueOf()) {
-      throw new Error("The end_date is older than the start_datee.");
+      throw new Error("The end_date is older than the start_date.");
     }
     const rateResponses = [];
     const days = this.diffDays(params.start_date, params.end_date);
@@ -388,11 +393,6 @@ export class exchangeratesapi {
         }
       } else {
         rates[rateResponse.date] = rateResponse.rates;
-      }
-      if (!Object.keys(rates[rateResponse.date]).length) {
-        throw new Error(
-          "You have provided one or more invalid Currency Codes."
-        );
       }
     }
     return {
