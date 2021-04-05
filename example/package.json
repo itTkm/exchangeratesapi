@@ -10,7 +10,8 @@
   "author": "itTkm",
   "license": "MIT",
   "dependencies": {
-    "@ittkm/exchangeratesapi": "file:.."
+    "@ittkm/exchangeratesapi": "file:..",
+    "dotenv": "^8.2.0"
   },
   "devDependencies": {
     "ts-node": "^9.1.1",

@@ -25,18 +25,6 @@ npm install --save @ittkm/exchangeratesapi
 yarn add @ittkm/exchangeratesapi
 ```
 
-## Examples
-
-After having cloned this repository, run the following commands:
-
-```bash
-cd example/
-npm install
-npm run import-sample
-# # or
-# npm run require-sample
-```
-
 ## Usage
 
 ```js
@@ -159,6 +147,24 @@ console.dir(await api.timeseries(timeseriesParameters));
 The format of the response is compatible with the original [Exchangerates API](https://exchangeratesapi.io/).
 
 See the [official documentation](https://exchangeratesapi.io/documentation/) for details.
+
+## Examples
+
+After having cloned this repository, run the following commands:
+
+```bash
+# Please define your API Access Key on the '.env' file
+cp .env.example .env
+vi .env
+
+# Initialize the example project
+cd example/ && npm install
+
+# Excecute example
+npm run import-sample
+# # or
+# npm run require-sample
+```
 
 ## License
 

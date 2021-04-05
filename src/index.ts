@@ -263,18 +263,13 @@ export class exchangeratesapi {
     if (params && params.date) date = params.date;
 
     let symbols = "";
-    if (!params.symbols) {
-      for (const symbol of DEFAULT_SYMBOLS) {
-        if (symbols === "") symbols = symbol;
-        else symbols += `,${symbol}`;
-      }
-    } else if (params.symbols instanceof Array) {
+    if (params.symbols && params.symbols instanceof Array) {
       for (const symbol of params.symbols) {
         if (symbols === "") symbols = symbol;
         else symbols += `,${symbol}`;
       }
     } else {
-      symbols = params.symbols;
+      symbols = params.symbols ? params.symbols : "";
     }
 
     let base = DEFAULT_BASE;
@@ -284,22 +279,42 @@ export class exchangeratesapi {
       base = params.base;
     }
 
-    const url = `${API_ENDPOINT}/${date}?access_key=${this.ACCESS_KEY}&base=${base}&symbols=${symbols}`;
+    let url = `${API_ENDPOINT}/${date}?access_key=${this.ACCESS_KEY}&base=${base}`;
+    if (!symbols) url += `&symbols=${symbols}`;
+
     const response = await this.request(url);
     if (params.base && base !== params.base) {
       const responseRates = response.rates;
       const rates: IExchangeratesapiRates = {};
-      if (params.symbols && params.symbols instanceof Array) {
-        for (const symbol of params.symbols) {
+      if (params.symbols) {
+        if (params.symbols instanceof Array) {
+          for (const symbol of params.symbols) {
+            if (symbol in responseRates && params.base in responseRates)
+              rates[symbol] = this.currencyExchange(
+                responseRates[params.base],
+                responseRates[symbol]
+              );
+          }
+        } else if (
+          params.symbols in responseRates &&
+          params.base in responseRates
+        ) {
+          rates[params.symbols] = this.currencyExchange(
+            responseRates[params.base],
+            responseRates[params.symbols]
+          );
+        }
+      } else {
+        for (const symbol of Object.keys(responseRates)) {
           rates[symbol] = this.currencyExchange(
             responseRates[params.base],
             responseRates[symbol]
           );
         }
-      } else if (params.symbols) {
-        rates[params.symbols] = this.currencyExchange(
-          responseRates[params.base],
-          responseRates[params.symbols]
+      }
+      if (!Object.keys(rates).length) {
+        throw new Error(
+          "You have provided one or more invalid Currency Codes."
         );
       }
       response.base = params.base;
@@ -324,10 +339,15 @@ export class exchangeratesapi {
       symbols: [params.from, params.to],
     };
     const rates = await this.historical(requestParams);
-    const rate = this.currencyExchange(
-      rates.rates[params.from],
-      rates.rates[params.to]
-    );
+    let rate;
+    if (params.from in rates.rates && params.to in rates.rates) {
+      rate = this.currencyExchange(
+        rates.rates[params.from],
+        rates.rates[params.to]
+      );
+    } else {
+      throw new Error("You have provided one or more invalid Currency Codes.");
+    }
     return {
       success: rates.success,
       query: {
@@ -351,7 +371,7 @@ export class exchangeratesapi {
     const startDate = new Date(Date.parse(params.start_date));
     const endDate = new Date(Date.parse(params.end_date));
     if (startDate.valueOf() > endDate.valueOf()) {
-      throw new Error("The end_date is older than the start_datee.");
+      throw new Error("The end_date is older than the start_date.");
     }
     const rateResponses = [];
     const days = this.diffDays(params.start_date, params.end_date);
@@ -368,7 +388,8 @@ export class exchangeratesapi {
       if (params.symbols instanceof Array) {
         rates[rateResponse.date] = {};
         for (const symbol of params.symbols) {
-          rates[rateResponse.date][symbol] = rateResponse.rates[symbol];
+          if (symbol in rateResponse.rates)
+            rates[rateResponse.date][symbol] = rateResponse.rates[symbol];
         }
       } else {
         rates[rateResponse.date] = rateResponse.rates;
@@ -390,17 +411,18 @@ export class exchangeratesapi {
     const response = await fetch(url, {
       method: "GET",
     })
-      .then((res) => {
+      .then(async (res) => {
         if (!res.ok) {
-          throw new Error(`${res.status} ${res.statusText}`);
+          throw new Error(
+            `${res.status} ${res.statusText} ${JSON.stringify(
+              await res.json()
+            )}`
+          );
         }
         return res.json();
       })
       .then((json: IExchangeratesapiResponse) => {
         return json;
-      })
-      .catch((reason) => {
-        throw new Error(reason);
       });
     return response;
   }
