@@ -3,6 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/@ittkm/exchangeratesapi.svg)](https://www.npmjs.com/package/@ittkm/exchangeratesapi)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](./LICENSE)
 [![Build Status](https://travis-ci.org/itTkm/exchangeratesapi.svg?branch=main)](https://travis-ci.org/itTkm/exchangeratesapi)
+[![Coverage Status](https://coveralls.io/repos/github/itTkm/exchangeratesapi/badge.svg?branch=main)](https://coveralls.io/github/itTkm/exchangeratesapi?branch=main)
 
 This is client of [Exchangerates API](https://exchangeratesapi.io/) with your free subscription plan.  
 You can perform 'Source Currency Switching', 'Currency Conversion' and 'Time-Frame Queries' at no cost.
