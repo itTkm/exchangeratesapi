@@ -18,4 +18,7 @@ tests/
 jest.config.js
 tsconfig.eslint.json
 
+# Output of 'npm pack'
+*.tgz
+
 .DS_Store
