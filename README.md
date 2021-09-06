@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/@ittkm/exchangeratesapi.svg)](https://www.npmjs.com/package/@ittkm/exchangeratesapi)
 [![npm downloads](https://img.shields.io/npm/dt/@ittkm/exchangeratesapi)](https://www.npmjs.com/package/@ittkm/exchangeratesapi)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](./LICENSE)
-[![Build Status](https://travis-ci.org/itTkm/exchangeratesapi.svg?branch=main)](https://travis-ci.org/itTkm/exchangeratesapi)
+[![Build Status](https://travis-ci.com/itTkm/exchangeratesapi.svg?branch=main)](https://travis-ci.com/itTkm/exchangeratesapi)
 [![Coverage Status](https://coveralls.io/repos/github/itTkm/exchangeratesapi/badge.svg?branch=main)](https://coveralls.io/github/itTkm/exchangeratesapi?branch=main)
 
 This is client of [Exchangerates API](https://exchangeratesapi.io/) with your free subscription plan.  
