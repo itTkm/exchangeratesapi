@@ -1,6 +1,6 @@
 {
   "name": "@ittkm/exchangeratesapi",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Client of https://exchangeratesapi.io/ with your free subscription plan. You can perform 'Source Currency Switching', 'Currency Conversion' and 'Time-Frame Queries' at no cost.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
